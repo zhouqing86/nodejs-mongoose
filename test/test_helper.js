@@ -12,7 +12,14 @@ before((done) => {
 
 
 beforeEach((done) => {
-  mongoose.connection.collections.users.drop(() => {
-    done();
-  }); //Add callback here to make test run after the users dropped.
+  const users = mongoose.connection.collections.users;
+  const comments = mongoose.connection.collections.comments;
+  const blogposts = mongoose.connection.collections.blogposts; //mongoose will lowercase the collection name
+  users.drop(() => {
+    comments.drop( () => {
+      blogposts.drop(() => {
+        done();
+      });
+    });
+  });
 });
