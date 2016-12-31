@@ -23,6 +23,11 @@ UserSchema.virtual('virtualPostCount').get(function() {
   return this.posts.length;
 });
 
+UserSchema.pre('remove', function(next){
+  const BlogPost = mongoose.model('blogPost');
+  BlogPost.remove( {_id: { $in: this.blogPosts }} ).then(() => next()); //$in is part of mongo
+});
+
 const User = mongoose.model('user', UserSchema);
 
 module.exports = User;
